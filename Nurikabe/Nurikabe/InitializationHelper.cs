@@ -27,13 +27,14 @@ namespace Nurikabe
             }
 
             Random ran = new Random();
+            int index;
             //i is row
             for (int i = 0; i < n; i++)
             {
                 //j is column
                 for (int j = 0; j < n; j++)
                 {
-                    int index = ran.Next(list.Count);
+                    index = ran.Next(list.Count);
                     blocks[i,j].Center = list[index];
                     list.RemoveAt(index);
                 }
