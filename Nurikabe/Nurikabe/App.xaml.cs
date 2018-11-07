@@ -13,5 +13,8 @@ namespace Nurikabe
     /// </summary>
     public partial class App : Application
     {
+        public static BlockStruct[,] blocks;
+
+        
     }
 }
