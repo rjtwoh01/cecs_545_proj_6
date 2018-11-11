@@ -11,5 +11,7 @@ namespace Nurikabe
         public bool? Center;
         public int Counter;
         public bool? StayPut;
+        public bool? Visited;
+        public int IslandValue;
     }
 }

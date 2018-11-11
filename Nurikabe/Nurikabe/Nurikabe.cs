@@ -92,7 +92,68 @@ namespace Nurikabe
             return fitness;
         }
 
-        public BlockStruct[,] Mutate(BlockStruct[,] blocks, int n, int wocVisit)
+        public static void CheckNeighbors(BlockStruct[][] blocks, ref List<BlockStruct> islandList, int i, int j, int n)
+        {
+            if (i != 0)  //not at top row check above it
+            {
+                if (blocks[i + 1][j].Center == true && blocks[i + 1][j].Visited == false)
+                {
+                    islandList.Add(blocks[i + 1][j]);
+                    blocks[i + 1][j].Visited = true;
+                }
+            }
+            if (i != n - 1)  //not the last row
+            {
+                if (blocks[i - 1][j].Center == true && blocks[i - 1][j].Visited == false)
+                {
+                    islandList.Add(blocks[i - 1][j]);
+                    blocks[i - 1][j].Visited = true;
+                }
+            }
+            if (j != 0)  //not at the left end
+            {
+                if (blocks[i][j - 1].Center == true && blocks[i][j - 1].Visited == false)
+                {
+                    islandList.Add(blocks[i][j - 1]);
+                    blocks[i][j - 1].Visited = true;
+                }
+            }
+            if (j != n - 1)  //not at the right end
+            {
+                if (blocks[i][j + 1].Center == true && blocks[i][j + 1].Visited == false)
+                {
+                    islandList.Add(blocks[i][j + 1]);
+                    blocks[i][j + 1].Visited = true;
+                }
+            }
+            islandList.RemoveAt(0); //remove top block from list
+        }
+
+        public static void IslandCounter(BlockStruct[][] blocks, int n)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (blocks[i][j].Center == true && blocks[i][j].Visited == false)  //a white block found and not visited
+                    {
+                        List<BlockStruct> islandList = new List<BlockStruct>();
+                        islandList.Add(blocks[i][j]);    //list to store the island list
+                        blocks[i][j].Visited = true;
+                        int counter = 1;
+                        while (islandList.Count != 0)  //list of islands is not empty
+                        {
+                            CheckNeighbors(blocks, ref islandList, i, j, n);
+                            counter++;
+                        }
+                        blocks[i][j].IslandValue = counter;
+                    }
+                }
+            } 
+        }
+
+
+        public List<BlockStruct> Mutate(int n)
         {
             //Debug.WriteLine("In mutate");
             //Get random number for row mutation
@@ -193,7 +254,8 @@ namespace Nurikabe
 
             return blocks;
         }
-        //Need to do the two checks here 1 for ponds, 2 for connected sea (black squares)
+        
+        //Need to do the two checks here 1 for ponds, 2 for connected sea (black squares) in RuleCheckHelper
 
 
     }
