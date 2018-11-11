@@ -153,7 +153,7 @@ namespace Nurikabe
         }
 
 
-        public List<BlockStruct> Mutate(int n)
+        public BlockStruct[,] Mutate(int n, BlockStruct[,] blocks, int wocVisit)
         {
             //Debug.WriteLine("In mutate");
             //Get random number for row mutation
