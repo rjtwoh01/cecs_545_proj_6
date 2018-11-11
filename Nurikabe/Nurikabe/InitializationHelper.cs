@@ -13,7 +13,7 @@ namespace Nurikabe
             //blocks[row,col]
             BlockStruct[,] blocks = new BlockStruct[n, n];
 
-            int numOfWhite = (int)((n * n) * 0.44);
+            int numOfWhite = (int)((n * n) * 0.52);
             List<bool> list = new List<bool>();
 
             //need a two diminsional array to get the blocks

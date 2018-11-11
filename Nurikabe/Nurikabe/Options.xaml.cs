@@ -47,15 +47,8 @@ namespace Nurikabe
         private void btnSolve_Click(object sender, RoutedEventArgs e)
         {
             BlockStruct[,] blocks = InitializationHelper.InitializeBlockArray(Convert.ToInt32(txtBoxSize.Text));
-            int i = 0;
-            foreach (BlockStruct block in blocks)
-            {
-                string color = block.Center == false ? "black" : "white";
-                Debug.WriteLine(i + ": " + color + "(" + block.Center + ")");
-                i++;
-            }
 
-            mainWindow.InitializeBoard(blocks, Convert.ToInt32(txtBoxSize.Text));
+            mainWindow.InitializeBoard(blocks, Convert.ToInt32(txtBoxSize.Text), Convert.ToInt32(txtIterations.Text), Convert.ToInt32(txtWOCVisit.Text));
             this.Hide();
         }
     }

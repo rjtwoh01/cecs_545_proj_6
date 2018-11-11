@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace Nurikabe
 {
     class NurikabeSolve
     {
-        public static BlockStruct[,] blocks;
         private RNGCryptoServiceProvider cryptoProvider = new RNGCryptoServiceProvider();
 
-        public List<BlockStruct> FisherYatesShuffle()
+
+        public List<BlockStruct> FisherYatesShuffle(BlockStruct[,] blocks)
         {
             List<BlockStruct> shuffledList = blocks.OfType<BlockStruct>().ToList();
 
@@ -33,29 +34,57 @@ namespace Nurikabe
             return shuffledList;
         }
 
+        public List<BlockStruct> FisherYatesShuffle(List<BlockStruct> blocks)
+        {
+            List<BlockStruct> shuffledList = blocks;
+
+            int n = shuffledList.Count;
+
+            while (n > 1)
+            {
+                var box = new byte[1];
+                do this.cryptoProvider.GetBytes(box);
+                while (!(box[0] < n * (Byte.MaxValue / n)));
+                var k = (box[0] % n);
+                n--;
+                var value = shuffledList[k];
+                shuffledList[k] = shuffledList[n];
+                shuffledList[n] = value;
+            }
+
+            return shuffledList;
+        }
+
         public int Fitness(BlockStruct[,] grid, int row, int n)
         {
+            //Debug.WriteLine("In Fitness");
             int neighbors = 0;
             int fitness = 0;
             for (int i = 0; i < n; i++)
             {
-                if (grid[row + 1, i].Center == false)  //it's black directly above
+                if (row + 1 < n)
                 {
-                    neighbors++;
+                    if (grid[row + 1, i].Center == false)  //it's black directly above
+                    {
+                        neighbors++;
+                    }
                 }
-                if (grid[row - 1,i].Center == false) //it's black directly below
+                if (i - 1 >= 0 && row-1 >= 0)
                 {
-                    neighbors++;
+                    if (grid[row - 1, i].Center == false) //it's black directly below
+                    {
+                        neighbors++;
+                    }
+                    if (grid[row, i - 1].Center == false || i == 0)  //it's black directly left or it is an edge
+                    {
+                        neighbors++;
+                    }
+                    if (grid[row - 1, i].Center == false || i == n - 1) //it's black directly to the right or at an edge
+                    {
+                        neighbors++;
+                    }
                 }
-                if (grid[row,i - 1].Center == false || i == 0)  //it's black directly left or it is an edge
-                {
-                    neighbors++;
-                }
-                if (grid[row - 1,i].Center == false || i == n - 1) //it's black directly to the right or at an edge
-                {
-                    neighbors++;
-                }
-                if(neighbors == 2||neighbors == 3)  //if it has 2 or 3 neighbors it is more likley to produce a valid solution
+                if (neighbors == 2 || neighbors == 3)  //if it has 2 or 3 neighbors it is more likley to produce a valid solution
                 {
                     fitness++;
                 }
@@ -63,8 +92,9 @@ namespace Nurikabe
             return fitness;
         }
 
-        public List<BlockStruct> Mutate(int n)
+        public BlockStruct[,] Mutate(BlockStruct[,] blocks, int n, int wocVisit)
         {
+            //Debug.WriteLine("In mutate");
             //Get random number for row mutation
             Random rnd = new Random();
             int row = rnd.Next(n);
@@ -78,7 +108,7 @@ namespace Nurikabe
             for (int r = 0; r < n; r++)
             {
                 //Needs to be blocks[r, x]... don't know how you want to do this yet
-                if (blocks[row, r].Counter > 10) //if a black square has been in this location at least 10 times, don't move it again
+                if (blocks[row, r].Counter > wocVisit) //if a black square has been in this location at least 10 times, don't move it again
                 {
                     blocks[row, r].StayPut = true;
                 }
@@ -89,15 +119,16 @@ namespace Nurikabe
             //Collect the row block information from parent;
             for (int i = 0; i < n; i++)
             {
-                rowList[i] = blocks[row,i];
+                //rowList[i] = blocks[row, i];
+                rowList.Insert(i, blocks[row, i]);
             }
 
-            for (int j = 0; j < 10; j++) //collect 10 children
+            for (int j = 0; j < 100; j++) //collect 10 children
             {
                 //List<BlockStruct> child = ShuffleList<BlockStruct>(n);
-                List<BlockStruct> temp = blocks.OfType<BlockStruct>().ToList();
+                //List<BlockStruct> temp = blocks.OfType<BlockStruct>().ToList();
                 //List<BlockStruct> child = genericFisherYatesShuffle<BlockStruct>(temp);
-                List<BlockStruct> child = FisherYatesShuffle();
+                List<BlockStruct> child = FisherYatesShuffle(rowList);
                 bool invalidChild = false;
 
                 //check WOC squares Counter for valid child if invalid it will be repeated in the below while loop
@@ -115,6 +146,7 @@ namespace Nurikabe
                 {
                     invalidChild = false;  //reset the flag
                     //child = ShuffleList<BlockStruct>(n);
+                    child = FisherYatesShuffle(rowList);
                     //check WOC squares Counter
                     for (int r = 0; r < n; r++)  //check the row against parent counters
                     {
@@ -135,7 +167,7 @@ namespace Nurikabe
                 //add back in to block structure for fitness check
                 for (int k = 0; k < n; k++)
                 {
-                    blocks[row,k] = bestChild[k];
+                    blocks[row, k] = bestChild[k];
                 }
 
                 //check fitness of each child
@@ -152,17 +184,17 @@ namespace Nurikabe
             //mark black squares in the grid with a marker for WOC
             for (int k = 0; k < n; k++)
             {
-                blocks[row,k] = bestChild[k];
-                if (blocks[row,k].Center == false) //its black need to increment the counter
+                blocks[row, k] = bestChild[k];
+                if (blocks[row, k].Center == false) //its black need to increment the counter
                 {
-                    blocks[row,k].Counter++;
+                    blocks[row, k].Counter++;
                 }
-            }
+            }            
 
-            return bestChild;
+            return blocks;
         }
         //Need to do the two checks here 1 for ponds, 2 for connected sea (black squares)
 
-        
+
     }
 }

@@ -22,22 +22,23 @@ namespace Nurikabe
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Viewbox viewbox;
-        private Canvas canvas;
         Options options;
+        bool hasNurikabeRun;
 
         public MainWindow()
         {
             InitializeComponent();
+            hasNurikabeRun = false;
         }
 
         //string color = blocks[i, j].Center == false ? : "B" : "W";
-        public void InitializeBoard(BlockStruct[,] blocks, int n)
+        public void InitializeBoard(BlockStruct[,] blocks, int n, int iterations, int wocVisit)
         {
             mainGrid.ShowGridLines = true;
-            TextBlock[,] block = new TextBlock[n,n];
+            TextBlock[,] block = new TextBlock[n, n];
             mainGrid.ColumnDefinitions.Clear();
             mainGrid.RowDefinitions.Clear();
+            mainGrid.Children.Clear();
             for (int i = 0; i < n; i++)
             {
                 RowDefinition row = new RowDefinition();
@@ -48,11 +49,11 @@ namespace Nurikabe
             }
             for (int i = 0; i < n; i++)
             {
-                
+
                 for (int j = 0; j < n; j++)
                 {
                     string color = "W";
-                    if (blocks[i,j].Center == false)
+                    if (blocks[i, j].Center == false)
                     {
                         color = "B";
                     }
@@ -75,6 +76,29 @@ namespace Nurikabe
                     mainGrid.Children.Add(border);
                 }
             }
+
+            if (hasNurikabeRun == false)
+            {
+                runNurikabe(blocks, n, iterations, wocVisit);
+            }
+        }
+
+        public void runNurikabe(BlockStruct[,] blocks, int n, int iterations, int wocVisit)
+        {
+            NurikabeSolve nurikabe = new NurikabeSolve();
+            Random rand = new Random();
+            hasNurikabeRun = true;
+            BlockStruct[,] temp = blocks;
+
+            for (int i = 0; i < iterations; i++)
+            {
+                temp = nurikabe.Mutate(temp, n, wocVisit);
+                if (RuleCheckHelper.CheckPond(ref temp, n) == true && RuleCheckHelper.CheckSeaConncetion(temp, n) == true) { Debug.WriteLine("Success at {0}", i); break; }
+                InitializeBoard(temp, n, iterations, wocVisit);
+                //Debug.WriteLine("Iteration {0}", i);
+            }
+
+            hasNurikabeRun = false;
         }
 
         private void btnOptions_Click(object sender, RoutedEventArgs e)
