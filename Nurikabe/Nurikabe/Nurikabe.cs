@@ -73,10 +73,10 @@ namespace Nurikabe
             for (int r = 0; r < n; r++)
             {
                 //Needs to be blocks[r, x]... don't know how you want to do this yet
-                //if (blocks[r].Counter > 10) //if a black square has been in this location at least 10 times, don't move it again
-                //{
-                //    blocks[r].StayPut = true;
-                //}
+                if (blocks[row, r].Counter > 10) //if a black square has been in this location at least 10 times, don't move it again
+                {
+                    blocks[row, r].StayPut = true;
+                }
             }
 
             List<BlockStruct> rowList = new List<BlockStruct>();
