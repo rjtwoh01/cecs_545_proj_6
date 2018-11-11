@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nurikabe"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="Nurikabe" WindowState="Maximized"        >
+
+    <Grid x:Name="mainGrid">
+        <Button x:Name="btnOptions" Content="Enter Options" HorizontalAlignment="Left" Height="36" Margin="10,10,0,0" VerticalAlignment="Top" Width="113" Click="btnOptions_Click"/>
+
     </Grid>
 </Window>
