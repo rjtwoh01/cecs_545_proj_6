@@ -40,7 +40,31 @@ namespace Nurikabe
                 }
             }
 
+            CheckAllWhiteRow(ref blocks);
+
             return blocks;
+        }
+
+        private static void CheckAllWhiteRow(ref BlockStruct[,] blocks)
+        {
+            for (int row = 0; row <= blocks.GetUpperBound(0); row++)
+            {
+                int whiteCounter = 0;
+                for (int col = 0; col <= blocks.GetUpperBound(1); col++)
+                {
+                    if (blocks[row, col].Center == true)
+                    {
+                        whiteCounter++;
+                    }
+                }
+
+                if (whiteCounter == blocks.GetUpperBound(1))
+                {
+                    //this row is all white, randomly change one cell to black
+                    Random ran = new Random();
+                    blocks[row, ran.Next(blocks.GetUpperBound(1))].Center = false;
+                }
+            }
         }
     }
 }
