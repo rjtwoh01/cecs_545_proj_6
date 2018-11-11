@@ -35,22 +35,27 @@ namespace Nurikabe
 
         public int Fitness(BlockStruct[,] grid, int row, int n)
         {
+            int neighbors = 0;
             int fitness = 0;
             for (int i = 0; i < n; i++)
             {
                 if (grid[row + 1, i].Center == false)  //it's black directly above
                 {
-                    fitness++;
+                    neighbors++;
                 }
                 if (grid[row - 1,i].Center == false) //it's black directly below
                 {
-                    fitness++;
+                    neighbors++;
                 }
                 if (grid[row,i - 1].Center == false || i == 0)  //it's black directly left or it is an edge
                 {
-                    fitness++;
+                    neighbors++;
                 }
                 if (grid[row - 1,i].Center == false || i == n - 1) //it's black directly to the right or at an edge
+                {
+                    neighbors++;
+                }
+                if(neighbors == 2||neighbors == 3)  //if it has 2 or 3 neighbors it is more likley to produce a valid solution
                 {
                     fitness++;
                 }
