@@ -65,7 +65,7 @@ namespace Nurikabe
                     {
                         color = "B";
                     }
-                    else { color = ""; }
+                    else { if (blocks[i, j].IslandValue != 0) color = blocks[i, j].IslandValue.ToString(); else color = ""; }
                     var border = new Border
                     {
                         BorderBrush = Brushes.Black,
@@ -102,10 +102,11 @@ namespace Nurikabe
             {
                 temp = nurikabe.Mutate(temp, n, wocVisit);
                 if (RuleCheckHelper.CheckPond(ref temp, n) == true && RuleCheckHelper.CheckSeaConncetion(temp, n) == true) { Debug.WriteLine("Success at {0}", i); break; }
-                InitializeBoard(temp, n, iterations, wocVisit);
+                //InitializeBoard(temp, n, iterations, wocVisit);
                 //Debug.WriteLine("Iteration {0}", i);
             }
-
+            nurikabe.IslandCounter(ref temp, n);
+            InitializeBoard(temp, n, iterations, wocVisit);
             hasNurikabeRun = false;
         }
 

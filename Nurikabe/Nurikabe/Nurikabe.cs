@@ -92,61 +92,61 @@ namespace Nurikabe
             return fitness;
         }
 
-        public static void CheckNeighbors(BlockStruct[][] blocks, ref List<BlockStruct> islandList, int i, int j, int n)
+        public static void CheckNeighbors(ref BlockStruct[,] blocks, ref List<BlockStruct> islandList, int i, int j, int n)
         {
             if (i != 0)  //not at top row check above it
             {
-                if (blocks[i + 1][j].Center == true && blocks[i + 1][j].Visited == false)
+                if (i+1 < n && blocks[i + 1,j].Center == true && blocks[i + 1,j].Visited == false)
                 {
-                    islandList.Add(blocks[i + 1][j]);
-                    blocks[i + 1][j].Visited = true;
+                    islandList.Add(blocks[i + 1,j]);
+                    blocks[i + 1,j].Visited = true;
                 }
             }
-            if (i != n - 1)  //not the last row
+            if (i-1 >= 0 && i != n - 1)  //not the last row
             {
-                if (blocks[i - 1][j].Center == true && blocks[i - 1][j].Visited == false)
+                if (blocks[i - 1,j].Center == true && blocks[i - 1,j].Visited == false)
                 {
-                    islandList.Add(blocks[i - 1][j]);
-                    blocks[i - 1][j].Visited = true;
+                    islandList.Add(blocks[i - 1,j]);
+                    blocks[i - 1,j].Visited = true;
                 }
             }
-            if (j != 0)  //not at the left end
+            if (j -1 >= 0 && j != 0)  //not at the left end
             {
-                if (blocks[i][j - 1].Center == true && blocks[i][j - 1].Visited == false)
+                if (blocks[i,j - 1].Center == true && blocks[i,j - 1].Visited == false)
                 {
-                    islandList.Add(blocks[i][j - 1]);
-                    blocks[i][j - 1].Visited = true;
+                    islandList.Add(blocks[i,j - 1]);
+                    blocks[i,j - 1].Visited = true;
                 }
             }
-            if (j != n - 1)  //not at the right end
+            if (j + 1 < n && j != n - 1)  //not at the right end
             {
-                if (blocks[i][j + 1].Center == true && blocks[i][j + 1].Visited == false)
+                if (blocks[i,j + 1].Center == true && blocks[i,j + 1].Visited == false)
                 {
-                    islandList.Add(blocks[i][j + 1]);
-                    blocks[i][j + 1].Visited = true;
+                    islandList.Add(blocks[i,j + 1]);
+                    blocks[i,j + 1].Visited = true;
                 }
             }
             islandList.RemoveAt(0); //remove top block from list
         }
 
-        public static void IslandCounter(BlockStruct[][] blocks, int n)
+        public void IslandCounter(ref BlockStruct[,] blocks, int n)
         {
             for (int i = 0; i < n; i++)
             {
                 for (int j = 0; j < n; j++)
                 {
-                    if (blocks[i][j].Center == true && blocks[i][j].Visited == false)  //a white block found and not visited
+                    if (blocks[i,j].Center == true && blocks[i,j].Visited == false)  //a white block found and not visited
                     {
                         List<BlockStruct> islandList = new List<BlockStruct>();
-                        islandList.Add(blocks[i][j]);    //list to store the island list
-                        blocks[i][j].Visited = true;
+                        islandList.Add(blocks[i,j]);    //list to store the island list
+                        blocks[i,j].Visited = true;
                         int counter = 1;
                         while (islandList.Count != 0)  //list of islands is not empty
                         {
-                            CheckNeighbors(blocks, ref islandList, i, j, n);
+                            CheckNeighbors(ref blocks, ref islandList, i, j, n);
                             counter++;
                         }
-                        blocks[i][j].IslandValue = counter;
+                        blocks[i,j].IslandValue = counter;
                     }
                 }
             } 
