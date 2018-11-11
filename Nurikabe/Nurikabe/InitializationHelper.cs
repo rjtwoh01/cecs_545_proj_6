@@ -36,6 +36,10 @@ namespace Nurikabe
                 {
                     index = ran.Next(list.Count);
                     blocks[i,j].Center = list[index];
+                    blocks[i, j].Visited = false;
+                    blocks[i, j].Counter = 0;
+                    blocks[i, j].StayPut = false;
+                    blocks[i, j].IslandValue = 0;
                     list.RemoveAt(index);
                 }
             }
