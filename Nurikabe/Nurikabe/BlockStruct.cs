@@ -9,9 +9,7 @@ namespace Nurikabe
     public struct BlockStruct
     {
         public bool? Center;
-        public bool? Up;
-        public bool? Down;
-        public bool? Right;
-        public bool? Left;
+        public int Counter;
+        public bool? StayPut;
     }
 }
