@@ -24,6 +24,10 @@ namespace Nurikabe
     {
         Options options;
         bool hasNurikabeRun;
+        BlockStruct[,] blocks;
+        int n;
+        int iterations;
+        int wocVisit;
 
         public MainWindow()
         {
@@ -34,6 +38,10 @@ namespace Nurikabe
         //string color = blocks[i, j].Center == false ? : "B" : "W";
         public void InitializeBoard(BlockStruct[,] blocks, int n, int iterations, int wocVisit)
         {
+            this.blocks = blocks;
+            this.n = n;
+            this.iterations = iterations;
+            this.wocVisit = wocVisit;
             mainGrid.ShowGridLines = true;
             TextBlock[,] block = new TextBlock[n, n];
             mainGrid.ColumnDefinitions.Clear();
@@ -79,11 +87,11 @@ namespace Nurikabe
 
             if (hasNurikabeRun == false)
             {
-                runNurikabe(blocks, n, iterations, wocVisit);
+                //runNurikabe(blocks, n, iterations, wocVisit);
             }
         }
 
-        public void runNurikabe(BlockStruct[,] blocks, int n, int iterations, int wocVisit)
+        public void runNurikabe()
         {
             NurikabeSolve nurikabe = new NurikabeSolve();
             Random rand = new Random();
@@ -115,6 +123,11 @@ namespace Nurikabe
         private void ClearScreen()
         {
             mainGrid.Children.Clear();
+        }
+
+        private void btnSolve_Click(object sender, RoutedEventArgs e)
+        {
+            runNurikabe();
         }
     }
 }

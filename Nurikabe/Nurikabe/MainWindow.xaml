@@ -10,5 +10,6 @@
     <Grid>
         <Button x:Name="btnOptions" Content="Enter Options" HorizontalAlignment="Left" Height="36" Margin="10,10,0,0" VerticalAlignment="Top" Width="113" Click="btnOptions_Click"/>
         <Grid x:Name="mainGrid" Margin="0,51,0,0"/>
+        <Button x:Name="btnSolve" Content="Solve" HorizontalAlignment="Left" VerticalAlignment="Top" Width="113" Margin="148,10,0,0" Height="36" Click="btnSolve_Click"/>
     </Grid>
 </Window>

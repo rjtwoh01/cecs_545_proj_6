@@ -9,7 +9,7 @@
     <Grid>
         <Label Content="Enter board size (nxn):" HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" VerticalAlignment="Top" Width="151"/>
         <TextBox x:Name="txtBoxSize" HorizontalAlignment="Left" Height="23" Margin="10,45,0,0" TextWrapping="Wrap" Text="8" VerticalAlignment="Top" Width="180"/>
-        <Button x:Name="btnSolve" Content="Solve" HorizontalAlignment="Left" Margin="99,313,0,0" VerticalAlignment="Top" Width="91" Height="37" Click="btnSolve_Click"/>
+        <Button x:Name="btnSolve" Content="Accept" HorizontalAlignment="Left" Margin="99,313,0,0" VerticalAlignment="Top" Width="91" Height="37" Click="btnSolve_Click"/>
         <Label Content="Iterations" HorizontalAlignment="Left" Height="29" Margin="10,96,0,0" VerticalAlignment="Top" Width="151"/>
         <TextBox x:Name="txtIterations" HorizontalAlignment="Left" Height="23" Margin="10,130,0,0" TextWrapping="Wrap" Text="25" VerticalAlignment="Top" Width="180"/>
         <Label Content="WOC Vist" HorizontalAlignment="Left" Margin="10,181,0,144" Width="180"/>
