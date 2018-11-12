@@ -106,7 +106,8 @@ namespace Nurikabe
                 int fittest = 0;
                 temp = nurikabe.Mutate(temp, n, wocVisit, ref fittest);
                 //We need to check if this is an actual solution. If it is, we are done
-                if (RuleCheckHelper.CheckPond(ref temp, n) == true && RuleCheckHelper.CheckSeaConncetion(temp, n) == true) { Debug.WriteLine("Success at {0}", i); break; }
+                //Set iterations to how many we actually got through
+                if (RuleCheckHelper.CheckPond(ref temp, n) == true && RuleCheckHelper.CheckSeaConncetion(temp, n) == true) { Debug.WriteLine("Success at {0}", i); iterations = i; break; }
                 //InitializeBoard(temp, n, iterations, wocVisit);
                 //Debug.WriteLine("Iteration {0}", i);
                 innerSw.Stop();
@@ -136,7 +137,7 @@ namespace Nurikabe
                 }
             }
             catch (IOException e) {
-                MessageBox.Show("Please close the open file");
+                MessageBox.Show("Error printing results to file");
                 Debug.WriteLine(e);
             }
         }
