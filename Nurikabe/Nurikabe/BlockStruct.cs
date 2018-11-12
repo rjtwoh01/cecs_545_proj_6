@@ -13,5 +13,6 @@ namespace Nurikabe
         public bool? StayPut;
         public bool? Visited;
         public int IslandValue;
+        public bool isVisited; //used for black connectivity check
     }
 }

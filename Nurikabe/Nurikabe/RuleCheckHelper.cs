@@ -90,8 +90,9 @@ namespace Nurikabe
         /// </summary>
         /// <param name="blocks"></param>
         /// <returns>TRUE indicate the sea is properly connected, FALSE indicate the sea is cutted</returns>
-        public static bool CheckSeaConncetion(BlockStruct[,] blocks, int n)
+        public static bool CheckSeaConncetion(BlockStruct[,] blocks, int n, int numberOfWhite)
         {
+            List<BlockStruct> blackList = new List<BlockStruct>();
             //Debug.WriteLine("In CheckSeaConnection");
             for (int row = 0; row <= blocks.GetUpperBound(0); row++)
             {
@@ -103,22 +104,56 @@ namespace Nurikabe
                         continue;
                     }
 
-                    //as long as a black cell is connected to another black cell, it's ok
-                    if (row - 1 >= 0 && col - 1 >= 0 && col + 1 < n && row + 1 < n)
+                    //skip the black cell if already visited
+                    if (blocks[row, col].isVisited == true)
                     {
-                        if (blocks[row - 1, col].Center == false || blocks[row, col - 1].Center == false || blocks[row + 1, col].Center == false || blocks[row, col + 1].Center == false)
-                        {
-                            continue;
-                        }
+                        continue;
                     }
-                    else
+
+                    blocks[row, col].isVisited = true;
+                    bool hasBlackNeighbor = false;
+                    //as long as a black cell is connected to another black cell, it's ok
+
+                    if (row - 1 >= 0 && blocks[row - 1, col].Center == false)//up
                     {
-                        return false;
+                        blackList.Add(blocks[row - 1, col]);
+                        blocks[row - 1, col].isVisited = true;
+                        hasBlackNeighbor = true;
+                    }
+                    else if (col -1 >= 0 && blocks[row, col - 1].Center == false)//left
+                    {
+                        blackList.Add(blocks[row, col - 1]);
+                        blocks[row, col - 1].isVisited = true;
+                        hasBlackNeighbor = true;
+                    }
+                    else if (row + 1 < n && blocks[row + 1, col].Center == false)//down
+                    {
+                        blackList.Add(blocks[row + 1, col]);
+                        blocks[row + 1, col].isVisited = true;
+                        hasBlackNeighbor = true;
+                    }
+                    else if (col + 1 < n && blocks[row, col + 1].Center == false)//right
+                    {
+                        blackList.Add(blocks[row, col + 1]);
+                        blocks[row, col + 1].isVisited = true;
+                        hasBlackNeighbor = true;
+                    }
+
+                    if (hasBlackNeighbor == true)
+                    {
+                        blackList.Add(blocks[row, col]);
                     }
                 }
             }
 
-            return true;
+            if (blackList.Count == n * n - numberOfWhite)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

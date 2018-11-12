@@ -107,7 +107,8 @@ namespace Nurikabe
                 temp = nurikabe.Mutate(temp, n, wocVisit, ref fittest);
                 //We need to check if this is an actual solution. If it is, we are done
                 //Set iterations to how many we actually got through
-                if (RuleCheckHelper.CheckPond(ref temp, n) == true && RuleCheckHelper.CheckSeaConncetion(temp, n) == true) { Debug.WriteLine("Success at {0}", i); iterations = i; break; }
+                int numWhite = numOfWhite(temp);
+                if (RuleCheckHelper.CheckPond(ref temp, n) == true && RuleCheckHelper.CheckSeaConncetion(temp, n, numWhite) == true) { Debug.WriteLine("Success at {0}", i); iterations = i; break; }
                 //InitializeBoard(temp, n, iterations, wocVisit);
                 //Debug.WriteLine("Iteration {0}", i);
                 innerSw.Stop();
@@ -121,6 +122,21 @@ namespace Nurikabe
             hasNurikabeRun = false;
             writeFile(fitness, elapsedTime);
             this.lblTime.Content = "Total time: " + sw.Elapsed.ToString() + ", solution: " + elapsedTime.Last().ToString();
+        }
+
+        public int numOfWhite(BlockStruct[,] b)
+        {
+            int numWhite = 0;
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (b[i,j].Center == true) numWhite++; 
+                }
+            }
+
+            return numWhite;
         }
 
         public void writeFile(List<int> fitness, List<TimeSpan> elapsedTime)
