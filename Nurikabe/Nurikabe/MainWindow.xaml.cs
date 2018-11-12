@@ -110,6 +110,7 @@ namespace Nurikabe
             InitializeBoard(temp, n, iterations, wocVisit);
             hasNurikabeRun = false;
             writeFile(fitness, elapsedTime);
+            this.lblTime.Content = "Total time: " + sw.Elapsed.ToString() + ", solution: " + elapsedTime.Last().ToString();
         }
 
         public void writeFile(List<int> fitness, List<TimeSpan> elapsedTime)
@@ -133,6 +134,8 @@ namespace Nurikabe
 
         private void btnOptions_Click(object sender, RoutedEventArgs e)
         {
+            ClearScreen();
+            this.lblTime.Content = "";
             //mainGrid.Children.Clear();
             if (this.options == null)
             {
