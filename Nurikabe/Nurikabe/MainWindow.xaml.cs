@@ -137,8 +137,26 @@ namespace Nurikabe
                 }
             }
             catch (IOException e) {
-                MessageBox.Show("Error printing results to file");
-                Debug.WriteLine(e);
+                try
+                {
+                    string path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    Debug.WriteLine("Path: " + path);
+                    using (StreamWriter writer = new StreamWriter(path + "/nurikabe_board-size-" + n + "_iterations-" + iterations + "_wocVisits-" + wocVisit + ".csv"))
+                    {
+                        writer.WriteLine("Iteration,Fitness,Elapsed Time");
+                        for (int i = 0; i < iterations; i++)
+                        {
+                            writer.WriteLine(i + "," + fitness.ElementAt(i) + "," + elapsedTime.ElementAt(i).ToString("G"));
+                        }
+                    }
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show("Error printing results to file");
+                    Debug.WriteLine(ex);
+                }
+                
+                //Debug.WriteLine(e);
             }
         }
 
