@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Diagnostics;
-using System.Windows.Markup;
+using System.IO;
+using Microsoft.Win32;
 
 namespace Nurikabe
 {
@@ -97,17 +90,45 @@ namespace Nurikabe
             Random rand = new Random();
             hasNurikabeRun = true;
             BlockStruct[,] temp = blocks;
-
+            Stopwatch sw = Stopwatch.StartNew();
+            List<TimeSpan> elapsedTime = new List<TimeSpan>();
+            List<int> fitness = new List<int>();
             for (int i = 0; i < iterations; i++)
             {
-                temp = nurikabe.Mutate(temp, n, wocVisit);
+                Stopwatch innerSw = Stopwatch.StartNew();
+                int fittest = 0;
+                temp = nurikabe.Mutate(temp, n, wocVisit, ref fittest);
                 if (RuleCheckHelper.CheckPond(ref temp, n) == true && RuleCheckHelper.CheckSeaConncetion(temp, n) == true) { Debug.WriteLine("Success at {0}", i); break; }
                 //InitializeBoard(temp, n, iterations, wocVisit);
                 //Debug.WriteLine("Iteration {0}", i);
+                innerSw.Stop();
+                elapsedTime.Add(innerSw.Elapsed);
+                fitness.Add(fittest);
             }
+            sw.Stop();
             nurikabe.IslandCounter(ref temp, n);
             InitializeBoard(temp, n, iterations, wocVisit);
             hasNurikabeRun = false;
+            writeFile(fitness, elapsedTime);
+        }
+
+        public void writeFile(List<int> fitness, List<TimeSpan> elapsedTime)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter("C:/temp/nurikabe_board-size-" + n + "_iterations-" + iterations + "_wocVisits-" + wocVisit + ".csv"))
+                {
+                    writer.WriteLine("Iteration,Fitness,Elapsed Time");
+                    for (int i = 0; i < iterations; i++)
+                    {
+                        writer.WriteLine(i + "," + fitness.ElementAt(i) + "," + elapsedTime.ElementAt(i).ToString("G"));
+                    }
+                }
+            }
+            catch (IOException e) {
+                MessageBox.Show("Please close the open file");
+                Debug.WriteLine(e);
+            }
         }
 
         private void btnOptions_Click(object sender, RoutedEventArgs e)
