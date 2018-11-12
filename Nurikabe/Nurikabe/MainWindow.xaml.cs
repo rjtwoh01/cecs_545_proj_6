@@ -37,9 +37,11 @@ namespace Nurikabe
             this.wocVisit = wocVisit;
             mainGrid.ShowGridLines = true;
             TextBlock[,] block = new TextBlock[n, n];
+            //reset the board, just in case
             mainGrid.ColumnDefinitions.Clear();
             mainGrid.RowDefinitions.Clear();
             mainGrid.Children.Clear();
+            //set up the board 
             for (int i = 0; i < n; i++)
             {
                 RowDefinition row = new RowDefinition();
@@ -48,6 +50,7 @@ namespace Nurikabe
                 mainGrid.ColumnDefinitions.Add(col);
                 mainGrid.RowDefinitions.Add(row);
             }
+            //Go through and place each block on the board
             for (int i = 0; i < n; i++)
             {
 
@@ -58,6 +61,7 @@ namespace Nurikabe
                     {
                         color = "B";
                     }
+                    //If its not black - place its number value if it has one. If not, do nothing
                     else { if (blocks[i, j].IslandValue != 0) color = blocks[i, j].IslandValue.ToString(); else color = ""; }
                     var border = new Border
                     {
@@ -91,6 +95,9 @@ namespace Nurikabe
             hasNurikabeRun = true;
             BlockStruct[,] temp = blocks;
             Stopwatch sw = Stopwatch.StartNew();
+
+            //We need to get 2 list that correlate directly with the amount of iterations
+            //We will store the fitness level of each pass and the elapsed time
             List<TimeSpan> elapsedTime = new List<TimeSpan>();
             List<int> fitness = new List<int>();
             for (int i = 0; i < iterations; i++)
@@ -98,6 +105,7 @@ namespace Nurikabe
                 Stopwatch innerSw = Stopwatch.StartNew();
                 int fittest = 0;
                 temp = nurikabe.Mutate(temp, n, wocVisit, ref fittest);
+                //We need to check if this is an actual solution. If it is, we are done
                 if (RuleCheckHelper.CheckPond(ref temp, n) == true && RuleCheckHelper.CheckSeaConncetion(temp, n) == true) { Debug.WriteLine("Success at {0}", i); break; }
                 //InitializeBoard(temp, n, iterations, wocVisit);
                 //Debug.WriteLine("Iteration {0}", i);
@@ -107,6 +115,7 @@ namespace Nurikabe
             }
             sw.Stop();
             nurikabe.IslandCounter(ref temp, n);
+            //print the results
             InitializeBoard(temp, n, iterations, wocVisit);
             hasNurikabeRun = false;
             writeFile(fitness, elapsedTime);

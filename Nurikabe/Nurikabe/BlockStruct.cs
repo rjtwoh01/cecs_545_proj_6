@@ -8,7 +8,7 @@ namespace Nurikabe
 {
     public struct BlockStruct
     {
-        public bool? Center;
+        public bool? Center; //Black or white node
         public int Counter;
         public bool? StayPut;
         public bool? Visited;
