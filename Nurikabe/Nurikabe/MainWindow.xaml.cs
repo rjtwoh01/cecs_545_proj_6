@@ -38,9 +38,7 @@ namespace Nurikabe
             mainGrid.ShowGridLines = true;
             TextBlock[,] block = new TextBlock[n, n];
             //reset the board, just in case
-            mainGrid.ColumnDefinitions.Clear();
-            mainGrid.RowDefinitions.Clear();
-            mainGrid.Children.Clear();
+            ClearScreen();
             //set up the board 
             for (int i = 0; i < n; i++)
             {
@@ -178,7 +176,7 @@ namespace Nurikabe
 
         private void btnOptions_Click(object sender, RoutedEventArgs e)
         {
-            ClearScreen();
+            //ClearScreen();
             this.lblTime.Content = "";
             //mainGrid.Children.Clear();
             if (this.options == null)
@@ -191,6 +189,8 @@ namespace Nurikabe
 
         private void ClearScreen()
         {
+            mainGrid.ColumnDefinitions.Clear();
+            mainGrid.RowDefinitions.Clear();
             mainGrid.Children.Clear();
         }
 

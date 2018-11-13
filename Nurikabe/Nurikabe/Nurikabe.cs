@@ -96,10 +96,10 @@ namespace Nurikabe
         {
             if (i != 0)  //not at top row check above it
             {
-                if (i+1 < n && blocks[i + 1,j].Center == true && blocks[i + 1,j].Visited == false)
+                if (i + 1 < n && blocks[i + 1, j].Center == true && blocks[i + 1, j].Visited == false)
                 {
-                    islandList.Add(blocks[i + 1,j]);
-                    blocks[i + 1,j].Visited = true;
+                    islandList.Add(blocks[i + 1, j]);
+                    blocks[i + 1, j].Visited = true;
                 }
             }
             if (i-1 >= 0 && i != n - 1)  //not the last row
